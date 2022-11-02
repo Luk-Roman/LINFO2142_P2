@@ -1,6 +1,5 @@
-import pyshark
+import pyshark, os
 from glom import glom
-
 interface= "wlan0"
 capture = pyshark.LiveCapture(interface=interface,display_filter="ssl.handshake.extensions_server_name")
 for packet in capture.sniff_continuously():
@@ -24,7 +23,10 @@ for packet in capture.sniff_continuously():
   else:
     continue
   tcp = packet[protocol]
-  print("source:",ip.src,":",tcp.srcport,"|","destination:",ip.dst,":",tcp.dstport)
   print(sni)
+  print("source:",ip.src,":",tcp.srcport,"|","destination:",ip.dst,":",tcp.dstport)
+  if("googlevideo" in sni):
+    print("youtube detected, blocking")
+    os.popen("./traffic-control-setup.sh "+interface+" "+ip.dst+" "+tcp.dstport+" "+tcp.srcport)
   print("------------------------------------------------------------------")
 
