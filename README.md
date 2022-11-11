@@ -25,7 +25,13 @@ If you wish to flush the qdisc on a specific interface, you can run this command
 ```bash
 $ sudo tc qdisc delete dev [interface] root
 ```
+## Dependencies :
+In order for our python script to work you must install these two python libraries :
+* [pyshark](https://pypi.org/project/pyshark/)
+* [glom](https://pypi.org/project/glom/)
 
+And you must install this package :
+* [tshark](https://www.wireshark.org/docs/man-pages/tshark.html)
 ## Contact :
 If you wish to contact us about our experiment, feel free to reach us by email :
 * Jean-Christophe Bauduin - [jean-christophe.bauduin@student.uclouvain.be](mailto:jean-christophe.bauduin@student.uclouvain.be)
