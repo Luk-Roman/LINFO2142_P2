@@ -1,9 +1,18 @@
-import pyshark, os
+import pyshark, os, sys
 from glom import glom
-interface= "wlan0"
+
+# Change this parameters to modify the behaviour of the filter
+# Remember to clean the qdisc with this function if you want to modify the limit :
+# $ sudo tc qdisc del dev [interface] root
+
+interface = "wlan0"
+limit = "1mbit"
+server_name="nflxvideo"
+
+print("Live capture starting ..")
+
 capture = pyshark.LiveCapture(interface=interface,display_filter="ssl.handshake.extensions_server_name")
 for packet in capture.sniff_continuously():
-  #print(packet)
   sni="0"
   protocol="tcp"
   if("ssl" in packet):
@@ -25,8 +34,8 @@ for packet in capture.sniff_continuously():
   tcp = packet[protocol]
   print(sni)
   print("source:",ip.src,":",tcp.srcport,"|","destination:",ip.dst,":",tcp.dstport)
-  if("googlevideo" in sni):
-    print("youtube detected, blocking")
-    os.popen("./traffic-control-setup.sh "+interface+" "+ip.dst+" "+tcp.dstport+" "+tcp.srcport)
+  if(server_name in sni):
+    print(server_name + " detected, blocking")
+    os.popen("./filter-setup.sh "+interface+" "+ip.dst+" "+limit)
   print("------------------------------------------------------------------")
 
