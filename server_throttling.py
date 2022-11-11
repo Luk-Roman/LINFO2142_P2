@@ -8,7 +8,7 @@ from glom import glom
 # Remember to clean the qdisc with this function if you want to modify the limit :
 # $ sudo tc qdisc del dev [interface] root
 
-interface = "wlan0"
+interface = "wlp1s0"
 limit = "1mbit"
 server_name = "nflxvideo"
 
