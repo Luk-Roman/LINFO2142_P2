@@ -6,8 +6,9 @@ from glom import glom
 
 interface = "wlp1s0"
 server_name = "nflxvideo"
-capture_limit = 100
-file1 = open("output.csv", "w")
+capture_limit = 10000
+filename = "output_youtube.csv"
+file1 = open(filename, "w")
 file1.write("ip,payload_size,entropy\n")
 
 
@@ -21,7 +22,7 @@ watched_ips = []
 payloads = []
 captured_cnt = 0
 capture = pyshark.LiveCapture(interface=interface)
-for packet in capture.sniff_continuously(): #packet_count=1000
+for packet in capture.sniff_continuously():
     if captured_cnt == capture_limit:
         break
     try : #Handshake TLS/SSL
@@ -33,7 +34,7 @@ for packet in capture.sniff_continuously(): #packet_count=1000
             sni = glom(packet, "tls.handshake_extensions_server_name")
         elif "quic" in packet:
             sni = glom(packet, "quic.tls_handshake_extensions_server_name")
-            protocol = "udp"
+            protocol ="udp"
         else:
             continue
         ip = "0"
